@@ -323,9 +323,17 @@ export const ManageEnquiriesPage: React.FC<ManageEnquiriesPageProps> = ({ onNavi
                       </div>
                       
                       <div className="bg-slate-50 p-3 rounded-lg mb-4">
-                        <p className="text-sm text-slate-700 leading-relaxed">
+                        <div className="space-y-2">
+                          <div className="flex items-center space-x-2 mb-2">
+                            <MessageCircle className="h-4 w-4 text-emerald-600" />
+                            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Customer Message</span>
+                          </div>
+                          <div className="bg-white p-4 rounded-lg border-l-4 border-emerald-500 shadow-sm">
+                            <p className="text-slate-800 leading-relaxed font-medium whitespace-pre-wrap">
                           {enquiry.message}
-                        </p>
+                            </p>
+                          </div>
+                        </div>
                       </div>
                     </div>
                     
@@ -469,10 +477,16 @@ export const ManageEnquiriesPage: React.FC<ManageEnquiriesPageProps> = ({ onNavi
                 
                 <div>
                   <h3 className="font-semibold text-slate-800 mb-3">Message</h3>
-                  <div className="bg-slate-50 p-4 rounded-lg">
-                    <p className="text-slate-700 leading-relaxed whitespace-pre-wrap">
+                  <div className="bg-gradient-to-br from-slate-50 to-slate-100 p-6 rounded-xl border-l-4 border-emerald-500 shadow-inner">
+                    <div className="flex items-center space-x-2 mb-4">
+                      <MessageCircle className="h-5 w-5 text-emerald-600" />
+                      <span className="text-sm font-semibold text-slate-600 uppercase tracking-wide">Customer Message</span>
+                    </div>
+                    <div className="bg-white p-4 rounded-lg shadow-sm">
+                      <p className="text-slate-800 leading-relaxed font-medium whitespace-pre-wrap text-lg">
                       {selectedEnquiry.message}
-                    </p>
+                      </p>
+                    </div>
                   </div>
                 </div>
                 
