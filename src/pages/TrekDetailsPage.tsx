@@ -1,5 +1,7 @@
 import React from 'react'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
+import { AnimatePresence } from 'framer-motion'
 import { 
   ArrowLeft, 
   MapPin, 
@@ -20,6 +22,7 @@ import {
 } from 'lucide-react'
 import { Trek } from '../types'
 import { EnquiryForm } from '../components/EnquiryForm'
+import { PaymentModal } from '../components/PaymentModal'
 
 interface TrekDetailsPageProps {
   trek: Trek
@@ -41,6 +44,8 @@ const difficultyIcons = {
 }
 
 export const TrekDetailsPage: React.FC<TrekDetailsPageProps> = ({ trek, onNavigateBack }) => {
+  const [showPaymentModal, setShowPaymentModal] = useState(false)
+
   const formatFullDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       weekday: 'long',
@@ -48,6 +53,15 @@ export const TrekDetailsPage: React.FC<TrekDetailsPageProps> = ({ trek, onNaviga
       month: 'long',
       day: 'numeric'
     })
+  }
+
+  const handlePaymentSuccess = (paymentId: string) => {
+    console.log('Payment successful:', paymentId)
+    // Here you would typically:
+    // 1. Update the trek's current_participants count
+    // 2. Send confirmation email
+    // 3. Create booking record in database
+    alert('Booking confirmed! Payment ID: ' + paymentId)
   }
 
   const containerVariants = {
@@ -426,6 +440,7 @@ export const TrekDetailsPage: React.FC<TrekDetailsPageProps> = ({ trek, onNaviga
               <motion.button
                 whileHover={{ scale: 1.02, y: -2 }}
                 whileTap={{ scale: 0.98 }}
+                onClick={() => setShowPaymentModal(true)}
                 className="w-full py-4 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300"
                 disabled={trek.current_participants >= trek.max_participants}
               >
@@ -483,6 +498,17 @@ export const TrekDetailsPage: React.FC<TrekDetailsPageProps> = ({ trek, onNaviga
           </div>
         </div>
       </div>
+
+      {/* Payment Modal */}
+      <AnimatePresence>
+        {showPaymentModal && (
+          <PaymentModal
+            trek={trek}
+            onClose={() => setShowPaymentModal(false)}
+            onPaymentSuccess={handlePaymentSuccess}
+          />
+        )}
+      </AnimatePresence>
     </motion.div>
   )
 }
