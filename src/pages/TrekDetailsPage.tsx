@@ -452,7 +452,7 @@ export const TrekDetailsPage: React.FC<TrekDetailsPageProps> = ({ trek, onNaviga
                 ) : (
                   <>
                     <Heart className="h-5 w-5 inline mr-2" />
-                    Book This Trek
+                    Book
                   </>
                 )}
               </motion.button>
