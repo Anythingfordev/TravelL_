@@ -198,6 +198,7 @@ export const Hero: React.FC = () => {
                     {tag}
                   </motion.button>
                 ))}
+              </motion.div>
             </motion.div>
 
             {/* Additional CTA */}
