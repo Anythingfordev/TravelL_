@@ -169,7 +169,7 @@ function App() {
                 transition={{ duration: 0.6 }}
                 className="text-4xl font-bold text-slate-800 mb-4"
               >
-                Weekend Trips from Bangalore
+                Explore by Category
               </motion.h2>
               <motion.p
                 initial={{ y: 30, opacity: 0 }}
@@ -178,11 +178,11 @@ function App() {
                 transition={{ delay: 0.2, duration: 0.6 }}
                 className="text-xl text-slate-600 max-w-2xl mx-auto"
               >
-                Escape the city and explore amazing destinations perfect for weekend getaways
+                Discover adventures organized by your interests and preferences
               </motion.p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            <div className="space-y-12">
               {activeCategories.map((category, categoryIndex) => {
                 const categoryTreks = getTreksForCategory(category.id, 3)
                 
@@ -193,93 +193,48 @@ function App() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: categoryIndex * 0.1, duration: 0.8 }}
-                    className="bg-white rounded-xl shadow-lg overflow-hidden border border-slate-100 hover:shadow-xl transition-all duration-300"
+                    className="bg-white rounded-xl shadow-lg p-8 border border-slate-100"
                   >
-                    {/* Image Collage */}
-                    <div className="relative h-48 bg-gradient-to-br from-blue-400 to-emerald-500 overflow-hidden">
-                      {categoryTreks.length > 0 ? (
-                        <div className="grid grid-cols-3 gap-1 h-full p-2">
-                          {categoryTreks.slice(0, 6).map((trek, index) => (
-                            <motion.div
-                              key={trek.id}
-                              initial={{ opacity: 0, scale: 0.8 }}
-                              animate={{ opacity: 1, scale: 1 }}
-                              transition={{ delay: index * 0.1 }}
-                              className={`relative overflow-hidden rounded-lg ${
-                                index === 0 ? 'col-span-2 row-span-2' : 
-                                index < 3 ? 'col-span-1' : 'hidden'
-                              }`}
-                            >
-                              <img 
-                                src={trek.image_url} 
-                                alt={trek.title}
-                                className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
-                              />
-                              <div className="absolute inset-0 bg-black/20 hover:bg-black/10 transition-colors" />
-                            </motion.div>
-                          ))}
-                          {categoryTreks.length > 3 && (
-                            <div className="absolute bottom-2 right-2 bg-black/70 text-white px-2 py-1 rounded-full text-xs font-medium">
-                              +{categoryTreks.length - 3} more
-                            </div>
-                          )}
+                    <div className="flex items-center justify-between mb-6">
+                      <div className="flex items-center space-x-3">
+                        <div className="p-3 bg-emerald-100 rounded-xl">
+                          <Tag className="h-8 w-8 text-emerald-600" />
                         </div>
-                      ) : (
-                        <div className="flex items-center justify-center h-full">
-                          <div className="text-center text-white">
-                            <Mountain className="h-12 w-12 mx-auto mb-2 opacity-70" />
-                            <p className="text-sm opacity-80">Coming Soon</p>
-                          </div>
+                        <div>
+                          <h3 className="text-2xl font-bold text-slate-800">{category.title}</h3>
+                          <p className="text-slate-600">{category.description}</p>
                         </div>
-                      )}
-                    </div>
-
-                    {/* Card Content */}
-                    <div className="p-6">
-                      <div className="mb-4">
-                        <h3 className="text-xl font-bold text-slate-800 mb-2">{category.title}</h3>
-                        <p className="text-slate-600 text-sm line-clamp-2">{category.description}</p>
                       </div>
-                      
-                      {/* Trek Count and Price Range */}
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="text-sm text-slate-500">
-                          {getTotalTreksForCategory(category.id)} trips available
-                        </div>
-                        {categoryTreks.length > 0 && (
-                          <div className="text-right">
-                            <div className="text-sm text-slate-500">Starting from</div>
-                            <div className="text-lg font-bold text-emerald-600">
-                              ₹{Math.min(...categoryTreks.map(t => t.price))}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                      
-                      {/* Book Now Button */}
                       <motion.button
                         whileHover={{ scale: 1.02, y: -2 }}
                         whileTap={{ scale: 0.98 }}
                         onClick={() => handleNavigateToCategory(category.id)}
-                        className="w-full py-3 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-lg font-semibold text-sm transition-all duration-300 shadow-md hover:shadow-lg"
+                        className="px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium transition-colors"
                       >
-                        Book Now
+                        View All
                       </motion.button>
                     </div>
+                    
+                    {categoryTreks.length > 0 ? (
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {categoryTreks.map((trek, index) => (
+                          <TrekCard 
+                            key={trek.id} 
+                            trek={trek} 
+                            index={index} 
+                            onViewDetails={() => handleViewTrekDetails(trek)}
+                          />
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-center py-8">
+                        <Mountain className="h-12 w-12 text-slate-300 mx-auto mb-3" />
+                        <p className="text-slate-500">No treks available in this category yet.</p>
+                      </div>
+                    )}
                   </motion.div>
                 )
               })}
-            </div>
-            
-            {/* View All Categories Button */}
-            <div className="text-center">
-              <motion.button
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-8 py-3 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
-              >
-                View All Categories
-              </motion.button>
             </div>
           </motion.section>
         )}
