@@ -257,18 +257,11 @@ function App() {
                           </div>
                           
                           {getTotalTreksForCategory(category.id) > 0 && (
-                            <motion.button
-                              whileHover={{ scale: 1.05, y: -3 }}
-                              whileTap={{ scale: 0.95 }}
-                              onClick={() => handleNavigateToCategory(category.id)}
-                              className="group flex items-center space-x-3 px-8 py-4 bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 hover:from-amber-600 hover:via-orange-600 hover:to-red-600 text-white rounded-2xl font-medium transition-all duration-500 shadow-lg hover:shadow-2xl relative overflow-hidden"
-                            >
-                              {/* Animated background */}
-                              <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                              
-                              <span className="relative z-10 text-lg">Explore All ({getTotalTreksForCategory(category.id)})</span>
-                              <ArrowRight className="h-5 w-5 relative z-10 group-hover:translate-x-1 transition-transform duration-300" />
-                            </motion.button>
+                            <div className="flex items-center space-x-2 text-amber-700">
+                              <span className="text-sm font-medium">
+                                {getTotalTreksForCategory(category.id)} sacred paths available
+                              </span>
+                            </div>
                           )}
                         </div>
                       </div>
@@ -325,26 +318,65 @@ function App() {
                         </div>
                       )}
                       
-                      {/* Show "View All" link at bottom if there are more than 3 treks */}
-                      {getTotalTreksForCategory(category.id) > 3 && (
+                      {/* Cute View All button at the bottom */}
+                      {getTotalTreksForCategory(category.id) > 0 && (
                         <div className="text-center mt-10">
                           <motion.button
-                            whileHover={{ scale: 1.02, y: -2 }}
+                            whileHover={{ scale: 1.05, y: -3 }}
                             whileTap={{ scale: 0.98 }}
                             onClick={() => handleNavigateToCategory(category.id)}
-                            className="group text-amber-700 hover:text-amber-800 font-medium text-xl flex items-center justify-center space-x-3 mx-auto relative"
+                            className="group inline-flex items-center space-x-3 px-8 py-4 bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 hover:from-amber-600 hover:via-orange-600 hover:to-red-600 text-white rounded-full font-medium transition-all duration-500 shadow-lg hover:shadow-2xl relative overflow-hidden"
                           >
-                            {/* Decorative line */}
-                            <div className="h-px bg-gradient-to-r from-transparent via-amber-400 to-transparent w-16 group-hover:w-24 transition-all duration-300"></div>
+                            {/* Animated background shimmer */}
+                            <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/30 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                             
-                            <span className="relative">
-                              Discover {getTotalTreksForCategory(category.id) - categoryTreks.length} more sacred paths in {category.title}
+                            {/* Cute sparkle effect */}
+                            <motion.div
+                              animate={{ rotate: [0, 360] }}
+                              transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                              className="relative z-10"
+                            >
+                              ✨
+                            </motion.div>
+                            
+                            <span className="relative z-10 text-lg font-semibold">
+                              {getTotalTreksForCategory(category.id) > categoryTreks.length 
+                                ? `Explore All ${getTotalTreksForCategory(category.id)} Adventures`
+                                : `Explore ${category.title}`
+                              }
                             </span>
                             
-                            <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
+                            <motion.div
+                              animate={{ x: [0, 3, 0] }}
+                              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                              className="relative z-10"
+                            >
+                              <ArrowRight className="h-5 w-5" />
+                            </motion.div>
                             
-                            <div className="h-px bg-gradient-to-r from-transparent via-amber-400 to-transparent w-16 group-hover:w-24 transition-all duration-300"></div>
+                            {/* Cute heart effect */}
+                            <motion.div
+                              animate={{ scale: [1, 1.2, 1] }}
+                              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                              className="relative z-10"
+                            >
+                              💖
+                            </motion.div>
                           </motion.button>
+                          
+                          {/* Cute subtitle */}
+                          <motion.p
+                            initial={{ opacity: 0 }}
+                            whileInView={{ opacity: 1 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: 0.3 }}
+                            className="mt-4 text-slate-500 text-sm font-light italic"
+                          >
+                            {getTotalTreksForCategory(category.id) > categoryTreks.length 
+                              ? `${getTotalTreksForCategory(category.id) - categoryTreks.length} more magical journeys await you`
+                              : "Begin your mindful adventure"
+                            }
+                          </motion.p>
                         </div>
                       )}
                     </div>
