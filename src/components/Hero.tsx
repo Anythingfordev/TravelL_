@@ -201,6 +201,8 @@ export const Hero: React.FC = () => {
               </div>
             </motion.div>
 
+            </motion.div>
+
             {/* Additional CTA */}
             <motion.div
               initial={{ y: 30, opacity: 0 }}
