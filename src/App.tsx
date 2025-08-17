@@ -408,8 +408,6 @@ function App() {
             </motion.div>
           </motion.section>
         )}
-                          </div>
-                        </div>
 
 
         {/* All Treks Section (fallback when no categories) */}
