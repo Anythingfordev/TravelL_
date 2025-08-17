@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Tag, MapPin, Calendar, Clock, Users, ArrowRight } from 'lucide-react'
+import { Tag, MapPin, Calendar, Clock, Users, ArrowRight, Compass, Mountain, Sunrise } from 'lucide-react'
 import { useAuth } from './hooks/useAuth'
 import { useTreks } from './hooks/useTreks'
 import { useCategories } from './hooks/useCategories'
@@ -161,28 +161,54 @@ function App() {
             transition={{ duration: 0.8 }}
             className="mb-16"
           >
-            <div className="text-center mb-12">
-              <motion.h2
+            {/* Zen-inspired header with spiritual elements */}
+            <div className="text-center mb-16 relative">
+              {/* Decorative elements */}
+              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-8">
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                  className="w-16 h-16 border-2 border-amber-300/30 rounded-full flex items-center justify-center"
+                >
+                  <Compass className="h-8 w-8 text-amber-600/60" />
+                </motion.div>
+              </div>
+              
+              <motion.div
                 initial={{ y: 30, opacity: 0 }}
                 whileInView={{ y: 0, opacity: 1 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="text-4xl font-bold text-slate-800 mb-4"
+                transition={{ duration: 0.8 }}
+                className="mb-8"
               >
-                Explore by Category
-              </motion.h2>
-              <motion.p
-                initial={{ y: 30, opacity: 0 }}
-                whileInView={{ y: 0, opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.2, duration: 0.6 }}
-                className="text-xl text-slate-600 max-w-2xl mx-auto"
-              >
-                Discover amazing adventures organized by your interests
-              </motion.p>
+                <div className="flex items-center justify-center space-x-4 mb-6">
+                  <div className="h-px bg-gradient-to-r from-transparent via-amber-400 to-transparent w-24"></div>
+                  <Sunrise className="h-8 w-8 text-amber-600" />
+                  <div className="h-px bg-gradient-to-r from-transparent via-amber-400 to-transparent w-24"></div>
+                </div>
+                
+                <h2 className="text-5xl md:text-6xl font-light text-slate-800 mb-6 tracking-wide">
+                  Sacred <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-orange-500 to-red-500">Journeys</span>
+                </h2>
+                
+                <p className="text-xl md:text-2xl text-slate-600 max-w-3xl mx-auto leading-relaxed font-light">
+                  Discover your path through mindful adventures that nourish the soul and awaken the spirit
+                </p>
+                
+                {/* Zen quote */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.5, duration: 0.8 }}
+                  className="mt-8 italic text-slate-500 text-lg font-light"
+                >
+                  "The journey of a thousand miles begins with a single step" - Lao Tzu
+                </motion.div>
+              </motion.div>
             </div>
 
-            <div className="space-y-16">
+            <div className="space-y-20">
               {activeCategories.map((category, categoryIndex) => {
                 const categoryTreks = getTreksForCategory(category.id, 3)
                 
@@ -193,77 +219,197 @@ function App() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: categoryIndex * 0.1, duration: 0.8 }}
-                    className="bg-white rounded-2xl shadow-lg p-8 border border-slate-100"
+                    className="relative"
                   >
-                    <div className="flex items-center justify-between mb-8">
-                      <div className="flex items-center justify-between w-full">
-                        <div className="flex items-center space-x-4">
-                          <div className="p-3 bg-emerald-100 rounded-xl">
-                            <Tag className="h-8 w-8 text-emerald-600" />
-                          </div>
-                          <div>
-                            <h3 className="text-2xl font-bold text-slate-800">{category.title}</h3>
-                            <p className="text-slate-600">{category.description}</p>
-                          </div>
-                        </div>
-                        
-                        {getTotalTreksForCategory(category.id) > 0 && (
-                          <motion.button
-                            whileHover={{ scale: 1.05, y: -2 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={() => handleNavigateToCategory(category.id)}
-                            className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white rounded-xl font-medium transition-all duration-300 shadow-lg hover:shadow-xl"
-                          >
-                            <span>View All ({getTotalTreksForCategory(category.id)})</span>
-                            <ArrowRight className="h-4 w-4" />
-                          </motion.button>
-                        )}
-                      </div>
-                    </div>
-
-                    {treksLoading || categoriesLoading ? (
-                      <div className="text-center py-8">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600 mx-auto mb-2"></div>
-                        <p className="text-slate-600">Loading treks...</p>
-                      </div>
-                    ) : categoryTreks.length === 0 ? (
-                      <div className="text-center py-8">
-                        <MapPin className="h-12 w-12 text-slate-300 mx-auto mb-3" />
-                        <p className="text-slate-500">No treks available in this category yet.</p>
-                      </div>
-                    ) : (
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {categoryTreks.map((trek, index) => (
-                          <TrekCard 
-                            key={trek.id} 
-                            trek={trek} 
-                            index={index} 
-                            onViewDetails={() => handleViewTrekDetails(trek)}
-                          />
-                        ))}
-                      </div>
-                    )}
+                    {/* Background with natural texture */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 rounded-3xl opacity-60"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent rounded-3xl"></div>
                     
-                    {/* Show "View All" link at bottom if there are more than 3 treks */}
-                    {getTotalTreksForCategory(category.id) > 3 && (
-                      <div className="text-center mt-6">
-                        <motion.button
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          onClick={() => handleNavigateToCategory(category.id)}
-                          className="text-emerald-600 hover:text-emerald-700 font-medium text-lg flex items-center justify-center space-x-2 mx-auto"
-                        >
-                          <span>View {getTotalTreksForCategory(category.id) - categoryTreks.length} more treks in {category.title}</span>
-                          <ArrowRight className="h-4 w-4" />
-                        </motion.button>
+                    {/* Decorative corner elements */}
+                    <div className="absolute top-4 left-4 w-12 h-12 border-l-2 border-t-2 border-amber-300/40 rounded-tl-2xl"></div>
+                    <div className="absolute bottom-4 right-4 w-12 h-12 border-r-2 border-b-2 border-amber-300/40 rounded-br-2xl"></div>
+                    
+                    <div className="relative bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-amber-200/50 p-10">
+                      <div className="flex items-center justify-between mb-10">
+                        <div className="flex items-center justify-between w-full">
+                          <div className="flex items-center space-x-6">
+                            {/* Zen-inspired icon container */}
+                            <motion.div 
+                              whileHover={{ scale: 1.1, rotate: 5 }}
+                              className="relative p-4 bg-gradient-to-br from-amber-100 to-orange-100 rounded-2xl shadow-lg border border-amber-200"
+                            >
+                              <div className="absolute inset-0 bg-gradient-to-br from-amber-200/20 to-orange-200/20 rounded-2xl"></div>
+                              <Mountain className="h-10 w-10 text-amber-700 relative z-10" />
+                            </motion.div>
+                            <div>
+                              <h3 className="text-3xl font-light text-slate-800 mb-2 tracking-wide">{category.title}</h3>
+                              <p className="text-slate-600 text-lg font-light leading-relaxed">{category.description}</p>
+                              
+                              {/* Mindful subtitle */}
+                              <div className="flex items-center space-x-2 mt-3">
+                                <div className="w-2 h-2 bg-amber-400 rounded-full"></div>
+                                <span className="text-sm text-amber-700 font-medium tracking-wider uppercase">
+                                  Mindful Adventures
+                                </span>
+                                <div className="w-2 h-2 bg-amber-400 rounded-full"></div>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          {getTotalTreksForCategory(category.id) > 0 && (
+                            <motion.button
+                              whileHover={{ scale: 1.05, y: -3 }}
+                              whileTap={{ scale: 0.95 }}
+                              onClick={() => handleNavigateToCategory(category.id)}
+                              className="group flex items-center space-x-3 px-8 py-4 bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 hover:from-amber-600 hover:via-orange-600 hover:to-red-600 text-white rounded-2xl font-medium transition-all duration-500 shadow-lg hover:shadow-2xl relative overflow-hidden"
+                            >
+                              {/* Animated background */}
+                              <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                              
+                              <span className="relative z-10 text-lg">Explore All ({getTotalTreksForCategory(category.id)})</span>
+                              <ArrowRight className="h-5 w-5 relative z-10 group-hover:translate-x-1 transition-transform duration-300" />
+                            </motion.button>
+                          )}
+                        </div>
                       </div>
-                    )}
+
+                      {treksLoading || categoriesLoading ? (
+                        <div className="text-center py-12">
+                          <motion.div
+                            animate={{ rotate: 360 }}
+                            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                            className="w-12 h-12 border-3 border-amber-200 border-t-amber-600 rounded-full mx-auto mb-4"
+                          ></motion.div>
+                          <p className="text-slate-600 font-light">Discovering sacred paths...</p>
+                        </div>
+                      ) : categoryTreks.length === 0 ? (
+                        <div className="text-center py-12">
+                          <motion.div
+                            animate={{ 
+                              y: [0, -10, 0],
+                              rotate: [0, 5, -5, 0]
+                            }}
+                            transition={{ 
+                              duration: 4,
+                              repeat: Infinity,
+                              ease: "easeInOut"
+                            }}
+                            className="mb-6"
+                          >
+                            <Mountain className="h-16 w-16 text-amber-300 mx-auto" />
+                          </motion.div>
+                          <p className="text-slate-500 text-lg font-light">New adventures are being prepared for this sacred journey.</p>
+                        </div>
+                      ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                          {categoryTreks.map((trek, index) => (
+                            <motion.div
+                              key={trek.id}
+                              initial={{ opacity: 0, y: 20 }}
+                              whileInView={{ opacity: 1, y: 0 }}
+                              viewport={{ once: true }}
+                              transition={{ delay: index * 0.1, duration: 0.6 }}
+                              className="relative group"
+                            >
+                              {/* Zen-inspired trek card wrapper */}
+                              <div className="absolute inset-0 bg-gradient-to-br from-amber-100/50 to-orange-100/50 rounded-2xl transform rotate-1 group-hover:rotate-0 transition-transform duration-300"></div>
+                              <div className="relative">
+                                <TrekCard 
+                                  trek={trek} 
+                                  index={index} 
+                                  onViewDetails={() => handleViewTrekDetails(trek)}
+                                />
+                              </div>
+                            </motion.div>
+                          ))}
+                        </div>
+                      )}
+                      
+                      {/* Show "View All" link at bottom if there are more than 3 treks */}
+                      {getTotalTreksForCategory(category.id) > 3 && (
+                        <div className="text-center mt-10">
+                          <motion.button
+                            whileHover={{ scale: 1.02, y: -2 }}
+                            whileTap={{ scale: 0.98 }}
+                            onClick={() => handleNavigateToCategory(category.id)}
+                            className="group text-amber-700 hover:text-amber-800 font-medium text-xl flex items-center justify-center space-x-3 mx-auto relative"
+                          >
+                            {/* Decorative line */}
+                            <div className="h-px bg-gradient-to-r from-transparent via-amber-400 to-transparent w-16 group-hover:w-24 transition-all duration-300"></div>
+                            
+                            <span className="relative">
+                              Discover {getTotalTreksForCategory(category.id) - categoryTreks.length} more sacred paths in {category.title}
+                            </span>
+                            
+                            <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
+                            
+                            <div className="h-px bg-gradient-to-r from-transparent via-amber-400 to-transparent w-16 group-hover:w-24 transition-all duration-300"></div>
+                          </motion.button>
+                        </div>
+                      )}
+                    </div>
+                    
+                    {/* Floating meditation elements */}
+                    <motion.div
+                      animate={{
+                        y: [0, -10, 0],
+                        rotate: [0, 5, 0]
+                      }}
+                      transition={{
+                        duration: 6,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        delay: categoryIndex * 0.5
+                      }}
+                      className="absolute -top-4 -right-4 w-8 h-8 bg-gradient-to-br from-amber-200 to-orange-200 rounded-full opacity-60 shadow-lg"
+                    ></motion.div>
+                    
+                    <motion.div
+                      animate={{
+                        y: [0, 8, 0],
+                        rotate: [0, -3, 0]
+                      }}
+                      transition={{
+                        duration: 8,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        delay: categoryIndex * 0.3
+                      }}
+                      className="absolute -bottom-2 -left-2 w-6 h-6 bg-gradient-to-br from-red-200 to-pink-200 rounded-full opacity-50 shadow-md"
+                    ></motion.div>
                   </motion.div>
                 )
               })}
             </div>
+            
+            {/* Closing zen element */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.8, duration: 1 }}
+              className="text-center mt-20"
+            >
+              <div className="flex items-center justify-center space-x-4">
+                <div className="h-px bg-gradient-to-r from-transparent via-amber-400 to-transparent w-32"></div>
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                  className="w-8 h-8 border border-amber-400 rounded-full flex items-center justify-center"
+                >
+                  <div className="w-2 h-2 bg-amber-500 rounded-full"></div>
+                </motion.div>
+                <div className="h-px bg-gradient-to-r from-transparent via-amber-400 to-transparent w-32"></div>
+              </div>
+              
+              <p className="mt-6 text-slate-500 font-light italic text-lg">
+                "Every mountain top is within reach if you just keep climbing"
+              </p>
+            </motion.div>
           </motion.section>
         )}
+                          </div>
+                        </div>
 
 
         {/* All Treks Section (fallback when no categories) */}
