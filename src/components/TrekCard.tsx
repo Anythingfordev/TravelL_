@@ -22,6 +22,7 @@ const difficultyIcons = {
   Hard: '🔥',
   Expert: '💀'
 }
+
 export const TrekCard: React.FC<TrekCardProps> = ({ trek, index, onViewDetails }) => {
 
   const formatDate = (dateString: string) => {
@@ -52,6 +53,7 @@ export const TrekCard: React.FC<TrekCardProps> = ({ trek, index, onViewDetails }
     }
   }
 
+  return (
     <motion.div
       variants={cardVariants}
       initial="hidden"
@@ -68,7 +70,8 @@ export const TrekCard: React.FC<TrekCardProps> = ({ trek, index, onViewDetails }
         style={{
           background: 'linear-gradient(45deg, rgba(16, 185, 129, 0.3), rgba(59, 130, 246, 0.3), rgba(16, 185, 129, 0.3))',
           backgroundSize: '200% 200%',
-      </div>
+        }}
+      />
     </motion.div>
   )
 }
